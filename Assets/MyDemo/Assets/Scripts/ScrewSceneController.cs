@@ -10,7 +10,6 @@ using UnityEngine;
 
 public class ScrewSceneController : MonoBehaviour
 {
-
     // Plates Visibility State
     public enum PlatesState { Both, Lat, Med, None }
 
@@ -83,6 +82,12 @@ public class ScrewSceneController : MonoBehaviour
         {
             foreach(Transform real_screw in screw.gameObject.transform)
             {
+                real_screw.gameObject.AddComponent(typeof(Rigidbody));
+                real_screw.gameObject.AddComponent(typeof(BoxCollider));
+                real_screw.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+                real_screw.gameObject.GetComponent<Rigidbody>().useGravity = false;
+                real_screw.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+
                 screws.Add(real_screw.gameObject);
                 originalScrewPositions.Add(real_screw.gameObject.name, real_screw.position);
                 originalScrewScales.Add(real_screw.gameObject.name, real_screw.localScale);
