@@ -4,20 +4,41 @@ using UnityEngine;
 
 public class OnTrigger : MonoBehaviour
 {
-    // // Start is called before the first frame update
-    // void Start()
-    // {
-        
-    // }
+    private Color default_color;
+    private Renderer rend; 
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        rend = gameObject.GetComponent<Renderer>();
+        default_color = rend.material.GetColor("_Color");
+
+    }
 
     // // Update is called once per frame
     // void Update()
     // {
-        
+
     // }
 
-    public void OnTriggerStay(Collider other) 
+    public void OnTriggerStay(Collider other)
+    {   
+        //ignore collisions with bone
+        if (other.gameObject.name == "BoneMix") { }         //TODO: add different bone pieces..
+        else
+        {
+            Debug.Log(gameObject.name + " was triggered by " + other.gameObject.name);
+            
+           //change color when colliding
+            rend.material.SetColor("_Color", Color.red);
+            
+        }
+
+    }
+    
+    public void OnTriggerExit(Collider other)
     {
-        Debug.Log(gameObject.name + " was triggered by " + other.gameObject.name);
+        Debug.Log("No longer in contact with " + other.gameObject.name);
+        rend.material.SetColor("_Color", default_color);
     }
 }
