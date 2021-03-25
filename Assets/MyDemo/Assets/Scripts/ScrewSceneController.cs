@@ -84,6 +84,7 @@ public class ScrewSceneController : MonoBehaviour
             {
                 real_screw.gameObject.AddComponent(typeof(Rigidbody));
                 real_screw.gameObject.AddComponent(typeof(BoxCollider));
+                real_screw.gameObject.AddComponent<OnTrigger>();
                 real_screw.gameObject.GetComponent<BoxCollider>().isTrigger = true;
                 real_screw.gameObject.GetComponent<Rigidbody>().useGravity = false;
                 real_screw.gameObject.GetComponent<Rigidbody>().isKinematic = true;
@@ -616,6 +617,9 @@ public class ScrewSceneController : MonoBehaviour
         screw.GetComponentInChildren<WholeScaleConstraint>(true).enabled = activate;
         screw.GetComponentInChildren<ScaleConstraint>(true).enabled = !activate;
         screw.GetComponentInChildren<PositionConstraint>(true).enabled = !activate;
+
+        screw.GetComponentInChildren<ObjectManipulator>(true).ManipulationType = Microsoft.MixedReality.Toolkit.Utilities.ManipulationHandFlags.OneHanded;
+        //screw.GetComponentInChildren<ObjectManipulator>(true).ManipulationType = Microsoft.MixedReality.Toolkit.Utilities.ManipulationHandFlags.TwoHanded;
     }
 
     public void DeleteScrew()

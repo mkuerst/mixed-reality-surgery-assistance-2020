@@ -22,9 +22,12 @@ public class OnTrigger : MonoBehaviour
     // }
 
     public void OnTriggerStay(Collider other)
-    {   
+    {
         //ignore collisions with bone
-        if (other.gameObject.name == "BoneMix") { }         //TODO: add different bone pieces..
+        if (other.gameObject.transform.parent.parent.name == "Bone")
+        {
+            Debug.Log(" No worries :) collision with bones ");
+        }
         else
         {
             Debug.Log(gameObject.name + " was triggered by " + other.gameObject.name);
