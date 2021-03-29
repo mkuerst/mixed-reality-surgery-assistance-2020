@@ -102,10 +102,12 @@ public class ScrewSceneController : MonoBehaviour
             if (plate.gameObject.name.StartsWith(Constants.LAT_SCREW_TAG))
             {
                 latPlate = plate.gameObject;
+                
             }
             else
             {
                 medPlate = plate.gameObject;
+               
             }
         }
 
