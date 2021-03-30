@@ -12,12 +12,10 @@ public class OnTrigger : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
         bone = GameObject.Find("Bone");
         bonemix = GameObject.Find("BoneMix");
         rend = gameObject.GetComponent<Renderer>();
         default_color = rend.material.GetColor("_Color");
-
     }
 
     // // Update is called once per frame
@@ -26,13 +24,12 @@ public class OnTrigger : MonoBehaviour
 
     // }
 
-    public void OnTriggerStay(Collider other)
+    public void OnTriggerEnter(Collider other)
     {
         //ignore collisions with bone
-        if (other.gameObject.transform.parent.transform.IsChildOf(bone.transform)||other.gameObject.transform==bonemix.transform) //if (other.gameObject.transform.parent.parent.name == "Bone")
+        if (other.gameObject.transform.parent.transform.IsChildOf(bone.transform) || other.gameObject.transform == bonemix.transform) //if (other.gameObject.transform.parent.parent.name == "Bone")
         {
-            return;
-            
+            return; 
         }
         else
         {
@@ -40,9 +37,7 @@ public class OnTrigger : MonoBehaviour
             
             //change color when colliding
             rend.material.SetColor("_Color", Color.red);
-            
         }
-
     }
     
     public void OnTriggerExit(Collider other)

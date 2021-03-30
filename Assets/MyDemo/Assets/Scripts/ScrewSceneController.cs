@@ -82,10 +82,10 @@ public class ScrewSceneController : MonoBehaviour
         {
             foreach(Transform real_screw in screw.gameObject.transform)
             {
-                real_screw.gameObject.AddComponent(typeof(Rigidbody));
-                real_screw.gameObject.AddComponent(typeof(BoxCollider));
+                real_screw.gameObject.AddComponent<Rigidbody>();
+                real_screw.gameObject.AddComponent<CapsuleCollider>();
                 real_screw.gameObject.AddComponent<OnTrigger>();
-                real_screw.gameObject.GetComponent<BoxCollider>().isTrigger = true;
+                real_screw.gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
                 real_screw.gameObject.GetComponent<Rigidbody>().useGravity = false;
                 real_screw.gameObject.GetComponent<Rigidbody>().isKinematic = true;
 
@@ -311,6 +311,7 @@ public class ScrewSceneController : MonoBehaviour
     private void ActivateScrew(GameObject screw)
     {
         screw.GetComponentInChildren<BoundsControl>(true).enabled = true;
+        screw.GetComponentInChildren<Collider>().enabled = false;
         screw.GetComponentInChildren<Renderer>().material = selectedScrewMaterial;
         SetCurrObjectManipulator(screw, manipulating);
         SetScrewSizeText(screw);
@@ -572,6 +573,12 @@ public class ScrewSceneController : MonoBehaviour
 
         screws.Add(newScrew);
         newScrew.transform.parent = screwGroup.transform;
+        newScrew.gameObject.AddComponent<Rigidbody>();
+        newScrew.gameObject.AddComponent<CapsuleCollider>();
+        newScrew.gameObject.AddComponent<OnTrigger>();
+        newScrew.gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
+        newScrew.gameObject.GetComponent<Rigidbody>().useGravity = false;
+        newScrew.gameObject.GetComponent<Rigidbody>().isKinematic = true;
         DeactivateScrew(screws[screwIndex]);
         screwIndex = screws.Count - 1;
         ActivateScrew(screws[screwIndex]);
