@@ -623,12 +623,13 @@ public class ScrewSceneController : MonoBehaviour
     {
         screw.GetComponentInChildren<ObjectManipulator>(true).enabled = activate;
         screw.GetComponentInChildren<NearInteractionGrabbable>(true).enabled = activate;
-        screw.GetComponentInChildren<WholeScaleConstraint>(true).enabled = activate;
+        screw.GetComponentInChildren<WholeScaleConstraint>(true).enabled = activate; //Here is how a MRTK-provided constraint manager is added, but I even failed to run this one :(
         screw.GetComponentInChildren<ScaleConstraint>(true).enabled = !activate;
         screw.GetComponentInChildren<PositionConstraint>(true).enabled = !activate;
 
-        screw.GetComponentInChildren<ObjectManipulator>(true).ManipulationType = Microsoft.MixedReality.Toolkit.Utilities.ManipulationHandFlags.OneHanded;
-        //screw.GetComponentInChildren<ObjectManipulator>(true).ManipulationType = Microsoft.MixedReality.Toolkit.Utilities.ManipulationHandFlags.TwoHanded;
+        /*Qianqing: I'm planning on somthing like the following
+        screw.GetComponentInChildren<PinchRotate>(true).enabled = activate;
+        */
     }
 
     public void DeleteScrew()

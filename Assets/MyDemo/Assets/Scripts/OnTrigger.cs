@@ -26,6 +26,16 @@ public class OnTrigger : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        //check null references
+        if (!other.gameObject.transform.parent || !gameObject.transform.parent)
+        {
+            return;
+        }
+        //ignore collisions with handles
+        if (other.gameObject.transform.parent.name == "rigRoot" || gameObject.transform.parent.name == "rigRoot")
+        {
+            return;
+        }
         //ignore collisions with bone
         if (other.gameObject.transform.parent.transform.IsChildOf(bone.transform) || other.gameObject.transform == bonemix.transform) //if (other.gameObject.transform.parent.parent.name == "Bone")
         {
