@@ -8,6 +8,8 @@ public class OnTrigger : MonoBehaviour
     private Renderer rend;
     GameObject bone;
     GameObject bonemix;
+    public Material selectedScrewMaterial;
+    public bool selectedFlag;
 
     // Start is called before the first frame update
     void Start()
@@ -43,16 +45,24 @@ public class OnTrigger : MonoBehaviour
         }
         else
         {
-            Debug.Log(gameObject.name + " was triggered by " + other.gameObject.name);
+            //Debug.Log(gameObject.name + " was triggered by " + other.gameObject.name);
             
-            //change color when colliding
+            // change default color to pink when screw is selected         
+            if(selectedFlag)
+            {
+                default_color = selectedScrewMaterial.color;
+            }
+
+            //change color to red when colliding
             rend.material.SetColor("_Color", Color.red);
+            
         }
     }
     
     public void OnTriggerExit(Collider other)
     {
-        Debug.Log("No longer in contact with " + other.gameObject.name);
+        //Debug.Log("No longer in contact with " + other.gameObject.name);
         rend.material.SetColor("_Color", default_color);
+        
     }
 }

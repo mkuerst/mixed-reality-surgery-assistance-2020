@@ -85,9 +85,13 @@ public class ScrewSceneController : MonoBehaviour
                 real_screw.gameObject.AddComponent<Rigidbody>();
                 real_screw.gameObject.AddComponent<CapsuleCollider>();
                 real_screw.gameObject.AddComponent<OnTrigger>();
+                real_screw.gameObject.GetComponent<OnTrigger>().selectedScrewMaterial=selectedScrewMaterial;
+                real_screw.gameObject.GetComponent<OnTrigger>().selectedFlag = false;
                 real_screw.gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
                 real_screw.gameObject.GetComponent<Rigidbody>().useGravity = false;
                 real_screw.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+
+                //real_screw.gameObject.AddComponent<PinchRotate>();
 
                 screws.Add(real_screw.gameObject);
                 originalScrewPositions.Add(real_screw.gameObject.name, real_screw.position);
@@ -305,14 +309,18 @@ public class ScrewSceneController : MonoBehaviour
         SetCurrObjectManipulator(screw, false);
         screw.GetComponentInChildren<BoundsControl>(true).enabled = false;
         screw.GetComponentInChildren<ScaleConstraint>(true).enabled = false;
-        screw.GetComponentInChildren<PositionConstraint>(true).enabled = false;
+        screw.GetComponentInChildren<PositionConstraint>(true).enabled = false; // new
+        screw.GetComponentInChildren<CapsuleCollider>(true).enabled = true;//  new
+        screw.GetComponent<OnTrigger>().selectedFlag = false;
     }
 
     private void ActivateScrew(GameObject screw)
     {
         screw.GetComponentInChildren<BoundsControl>(true).enabled = true;
         screw.GetComponentInChildren<Collider>().enabled = false;
+        screw.GetComponentInChildren<CapsuleCollider>().enabled = true;// new 
         screw.GetComponentInChildren<Renderer>().material = selectedScrewMaterial;
+        screw.GetComponent<OnTrigger>().selectedFlag = true;
         SetCurrObjectManipulator(screw, manipulating);
         SetScrewSizeText(screw);
     }
@@ -576,6 +584,7 @@ public class ScrewSceneController : MonoBehaviour
         newScrew.gameObject.AddComponent<Rigidbody>();
         newScrew.gameObject.AddComponent<CapsuleCollider>();
         newScrew.gameObject.AddComponent<OnTrigger>();
+        newScrew.gameObject.GetComponent<OnTrigger>().selectedScrewMaterial = selectedScrewMaterial;
         newScrew.gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
         newScrew.gameObject.GetComponent<Rigidbody>().useGravity = false;
         newScrew.gameObject.GetComponent<Rigidbody>().isKinematic = true;
@@ -628,8 +637,8 @@ public class ScrewSceneController : MonoBehaviour
         screw.GetComponentInChildren<PositionConstraint>(true).enabled = !activate;
 
         /*Qianqing: I'm planning on somthing like the following
-        screw.GetComponentInChildren<PinchRotate>(true).enabled = activate;
-        */
+        screw.GetComponentInChildren<PinchRotate>(true).enabled = activate;*/
+
     }
 
     public void DeleteScrew()
