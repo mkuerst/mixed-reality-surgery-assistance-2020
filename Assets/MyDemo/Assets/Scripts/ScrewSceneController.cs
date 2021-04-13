@@ -1,4 +1,5 @@
-﻿using Microsoft.MixedReality.Toolkit.Input;
+﻿using System.Diagnostics;
+using Microsoft.MixedReality.Toolkit.Input;
 using Microsoft.MixedReality.Toolkit.UI;
 using Microsoft.MixedReality.Toolkit.UI.BoundsControl;
 using System;
@@ -91,7 +92,7 @@ public class ScrewSceneController : MonoBehaviour
                 real_screw.gameObject.GetComponent<Rigidbody>().useGravity = false;
                 real_screw.gameObject.GetComponent<Rigidbody>().isKinematic = true;
 
-                //real_screw.gameObject.AddComponent<PinchRotate>();
+                real_screw.gameObject.AddComponent<PinchRotate>();
 
                 screws.Add(real_screw.gameObject);
                 originalScrewPositions.Add(real_screw.gameObject.name, real_screw.position);
@@ -521,7 +522,7 @@ public class ScrewSceneController : MonoBehaviour
             Vector3 p1 = LerpByDistance(AddScrewPoint, pos, -0.1f);
             Vector3 p2 = LerpByDistance(pos, AddScrewPoint, -0.1f);
 
-            Debug.Log("New Screw Added");
+            UnityEngine.Debug.Log("New Screw Added");
 
             Destroy(PointIndicator);
             boneGroup.GetComponent<PointerHandler>().enabled = false;
@@ -636,9 +637,28 @@ public class ScrewSceneController : MonoBehaviour
         screw.GetComponentInChildren<ScaleConstraint>(true).enabled = !activate;
         screw.GetComponentInChildren<PositionConstraint>(true).enabled = !activate;
 
-        /*Qianqing: I'm planning on somthing like the following
-        screw.GetComponentInChildren<PinchRotate>(true).enabled = activate;*/
+        //Qianqing: I'm planning on somthing like the following
+        // Michael: This unfortunately doesn't do anything but I think we can trigger onEnable() and
+        // onDisable() in the PinchRotate component to do stuff on activation.
+        // screw.GetComponentInChildren<PinchRotate>(true).enabled = activate;
+        
+        PinchRotate pinchRotateConstraint = screw.GetComponent<PinchRotate>();
+        ConstraintManager constraintManager = screw.GetComponent<ConstraintManager>();
 
+        // Have a look at ApplyConstraintsForType() in ConstraintManager.cs
+
+        // Add the constraints manually to the selectedConstraints list
+        // The list of auto constraints is private so we need to work with selectedConstraints
+        // On deactivate need to remove constraint from list - don't forget
+        constraintManager.AddConstraintToManualSelection(pinchRotateConstraint);
+       
+        // None of the TransformConstraint components are ever applied
+        // We need to disable autoConstraintSelection and set isActiveAndEnabled
+        // The apply methods of the screw constraintManagers are never called - only the ones of the BoneMix
+        constraintManager.AutoConstraintSelection = false;
+        double debug = 0;
+        // Apparently read-only - not sure how to set it
+        //pinchRotateConstraint.isActiveAndEnabled = true;
     }
 
     public void DeleteScrew()
