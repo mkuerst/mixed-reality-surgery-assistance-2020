@@ -85,10 +85,13 @@ public class ScrewSceneController : MonoBehaviour
             {
                 real_screw.gameObject.AddComponent<Rigidbody>();
                 real_screw.gameObject.AddComponent<CapsuleCollider>();
+                //real_screw.gameObject.AddComponent<MeshCollider>();
                 real_screw.gameObject.AddComponent<OnTrigger>();
                 real_screw.gameObject.GetComponent<OnTrigger>().selectedScrewMaterial=selectedScrewMaterial;
                 real_screw.gameObject.GetComponent<OnTrigger>().selectedFlag = false;
                 real_screw.gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
+                //real_screw.gameObject.GetComponent<MeshCollider>().convex = true;
+                //real_screw.gameObject.GetComponent<MeshCollider>().isTrigger = true;
                 real_screw.gameObject.GetComponent<Rigidbody>().useGravity = false;
                 real_screw.gameObject.GetComponent<Rigidbody>().isKinematic = true;
 
@@ -310,8 +313,9 @@ public class ScrewSceneController : MonoBehaviour
         SetCurrObjectManipulator(screw, false);
         screw.GetComponentInChildren<BoundsControl>(true).enabled = false;
         screw.GetComponentInChildren<ScaleConstraint>(true).enabled = false;
-        screw.GetComponentInChildren<PositionConstraint>(true).enabled = false; // new
-        screw.GetComponentInChildren<CapsuleCollider>(true).enabled = true;//  new
+        screw.GetComponentInChildren<PositionConstraint>(true).enabled = false; 
+        screw.GetComponentInChildren<CapsuleCollider>(true).enabled = true;
+        //screw.GetComponentInChildren<MeshCollider>(true).enabled = true;
         screw.GetComponent<OnTrigger>().selectedFlag = false;
     }
 
@@ -319,7 +323,8 @@ public class ScrewSceneController : MonoBehaviour
     {
         screw.GetComponentInChildren<BoundsControl>(true).enabled = true;
         screw.GetComponentInChildren<Collider>().enabled = false;
-        screw.GetComponentInChildren<CapsuleCollider>().enabled = true;// new 
+        screw.GetComponentInChildren<CapsuleCollider>().enabled = true;
+        //screw.GetComponentInChildren<MeshCollider>().enabled = true;// new 
         screw.GetComponentInChildren<Renderer>().material = selectedScrewMaterial;
         screw.GetComponent<OnTrigger>().selectedFlag = true;
         SetCurrObjectManipulator(screw, manipulating);
@@ -584,9 +589,12 @@ public class ScrewSceneController : MonoBehaviour
         newScrew.transform.parent = screwGroup.transform;
         newScrew.gameObject.AddComponent<Rigidbody>();
         newScrew.gameObject.AddComponent<CapsuleCollider>();
+        //newScrew.gameObject.AddComponent<MeshCollider>();
         newScrew.gameObject.AddComponent<OnTrigger>();
         newScrew.gameObject.GetComponent<OnTrigger>().selectedScrewMaterial = selectedScrewMaterial;
         newScrew.gameObject.GetComponent<CapsuleCollider>().isTrigger = true;
+        //newScrew.gameObject.GetComponent<MeshCollider>().convex = true;
+        //newScrew.gameObject.GetComponent<MeshCollider>().isTrigger = true;
         newScrew.gameObject.GetComponent<Rigidbody>().useGravity = false;
         newScrew.gameObject.GetComponent<Rigidbody>().isKinematic = true;
         DeactivateScrew(screws[screwIndex]);
