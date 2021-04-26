@@ -96,6 +96,7 @@ public class ScrewSceneController : MonoBehaviour
                 real_screw.gameObject.GetComponent<Rigidbody>().isKinematic = true;
 
                 real_screw.gameObject.AddComponent<PinchRotate>();
+                real_screw.gameObject.AddComponent<followChild>();
 
                 screws.Add(real_screw.gameObject);
                 originalScrewPositions.Add(real_screw.gameObject.name, real_screw.position);
@@ -317,6 +318,7 @@ public class ScrewSceneController : MonoBehaviour
         screw.GetComponentInChildren<CapsuleCollider>(true).enabled = true;
         //screw.GetComponentInChildren<MeshCollider>(true).enabled = true;
         screw.GetComponent<OnTrigger>().selectedFlag = false;
+       
     }
 
     private void ActivateScrew(GameObject screw)
@@ -324,7 +326,7 @@ public class ScrewSceneController : MonoBehaviour
         screw.GetComponentInChildren<BoundsControl>(true).enabled = true;
         screw.GetComponentInChildren<Collider>().enabled = false;
         screw.GetComponentInChildren<CapsuleCollider>().enabled = true;
-        //screw.GetComponentInChildren<MeshCollider>().enabled = true;// new 
+        //screw.GetComponentInChildren<MeshCollider>().enabled = true; 
         screw.GetComponentInChildren<Renderer>().material = selectedScrewMaterial;
         screw.GetComponent<OnTrigger>().selectedFlag = true;
         SetCurrObjectManipulator(screw, manipulating);
@@ -597,6 +599,7 @@ public class ScrewSceneController : MonoBehaviour
         //newScrew.gameObject.GetComponent<MeshCollider>().isTrigger = true;
         newScrew.gameObject.GetComponent<Rigidbody>().useGravity = false;
         newScrew.gameObject.GetComponent<Rigidbody>().isKinematic = true;
+        newScrew.AddComponent<followChild>();
         DeactivateScrew(screws[screwIndex]);
         screwIndex = screws.Count - 1;
         ActivateScrew(screws[screwIndex]);

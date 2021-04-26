@@ -8,6 +8,7 @@ public class OnTrigger : MonoBehaviour
     private Renderer rend;
     GameObject bone;
     GameObject bonemix;
+    GameObject screwChild;
     public Material selectedScrewMaterial;
     public bool selectedFlag;
     int counter;
@@ -17,6 +18,7 @@ public class OnTrigger : MonoBehaviour
     {
         bone = GameObject.Find("Bone");
         bonemix = GameObject.Find("BoneMix");
+        screwChild= GameObject.Find("screwChild");
         rend = gameObject.GetComponent<Renderer>();
         default_color = rend.material.GetColor("_Color");
         
@@ -37,6 +39,11 @@ public class OnTrigger : MonoBehaviour
         }
         //ignore collisions with bone
         if (other.gameObject.transform.parent.transform.IsChildOf(bone.transform) || other.gameObject.transform == bonemix.transform) //if (other.gameObject.transform.parent.parent.name == "Bone")
+        {
+            return;
+        }
+        //ignore collisions with screwChild
+        if (other.gameObject.transform == screwChild.transform) 
         {
             return;
         }
