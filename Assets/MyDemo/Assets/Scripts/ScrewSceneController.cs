@@ -95,7 +95,7 @@ public class ScrewSceneController : MonoBehaviour
                 real_screw.gameObject.GetComponent<Rigidbody>().useGravity = false;
                 real_screw.gameObject.GetComponent<Rigidbody>().isKinematic = true;
 
-                real_screw.gameObject.AddComponent<PinchRotate>();
+                //real_screw.gameObject.AddComponent<PinchRotate>();
                 real_screw.gameObject.AddComponent<followChild>();
 
                 screws.Add(real_screw.gameObject);
@@ -642,34 +642,12 @@ public class ScrewSceneController : MonoBehaviour
 
     private void SetCurrObjectManipulator(GameObject screw, bool activate)
     {
-        screw.GetComponentInChildren<ObjectManipulator>(true).enabled = activate;
+        screw.GetComponentInChildren<ObjectManipulator>(true).enabled = !activate;
         screw.GetComponentInChildren<NearInteractionGrabbable>(true).enabled = activate;
-        screw.GetComponentInChildren<WholeScaleConstraint>(true).enabled = activate; //Here is how a MRTK-provided constraint manager is added, but I even failed to run this one :(
+        screw.GetComponentInChildren<WholeScaleConstraint>(true).enabled = activate;
         screw.GetComponentInChildren<ScaleConstraint>(true).enabled = !activate;
-        screw.GetComponentInChildren<PositionConstraint>(true).enabled = !activate;
-
-        //Qianqing: I'm planning on somthing like the following
-        // Michael: This unfortunately doesn't do anything but I think we can trigger onEnable() and
-        // onDisable() in the PinchRotate component to do stuff on activation.
-        // screw.GetComponentInChildren<PinchRotate>(true).enabled = activate;
-        
-        PinchRotate pinchRotateConstraint = screw.GetComponent<PinchRotate>();
-        ConstraintManager constraintManager = screw.GetComponent<ConstraintManager>();
-
-        // Have a look at ApplyConstraintsForType() in ConstraintManager.cs
-
-        // Add the constraints manually to the selectedConstraints list
-        // The list of auto constraints is private so we need to work with selectedConstraints
-        // On deactivate need to remove constraint from list - don't forget
-        constraintManager.AddConstraintToManualSelection(pinchRotateConstraint);
-       
-        // None of the TransformConstraint components are ever applied
-        // We need to disable autoConstraintSelection and set isActiveAndEnabled
-        // The apply methods of the screw constraintManagers are never called - only the ones of the BoneMix
-        constraintManager.AutoConstraintSelection = false;
-        double debug = 0;
-        // Apparently read-only - not sure how to set it
-        //pinchRotateConstraint.isActiveAndEnabled = true;
+        screw.GetComponentInChildren<PositionConstraint>(true).enabled = activate;
+        screw.GetComponentInChildren<BoxCollider>(true).enabled = activate;
     }
 
     public void DeleteScrew()
