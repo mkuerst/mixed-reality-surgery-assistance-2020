@@ -9,7 +9,7 @@ public class followChild : MonoBehaviour
     private Transform follow;
     private Vector3 originalLocalPosition;
     private Quaternion originalLocalRotation;
-    private BoundsControl boundsControl;
+    public BoundsControl boundsControl;
     private bool selected;
     
 
@@ -34,9 +34,7 @@ public class followChild : MonoBehaviour
         screwChild.SetActive(false);
         //hide scale handles
         boundsControl.ScaleHandlesConfig.ShowScaleHandles = false;
-        screwChild.SetActive(true);
-
-
+        screwChild.GetComponentInChildren<BoxCollider>().enabled = false;
     }
     private void Update()
     {
