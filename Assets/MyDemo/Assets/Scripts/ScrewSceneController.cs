@@ -63,6 +63,7 @@ public class ScrewSceneController : MonoBehaviour
     public static bool ScrewAddModePlanar = false;
     // Screw Size text
     private TextMesh screwSizeText;
+    private GameObject boneMix;
 
 
     void Start()
@@ -94,8 +95,6 @@ public class ScrewSceneController : MonoBehaviour
                 //real_screw.gameObject.GetComponent<MeshCollider>().isTrigger = true;
                 real_screw.gameObject.GetComponent<Rigidbody>().useGravity = false;
                 real_screw.gameObject.GetComponent<Rigidbody>().isKinematic = true;
-
-                //real_screw.gameObject.AddComponent<PinchRotate>();
                 real_screw.gameObject.AddComponent<followChild>();
 
                 screws.Add(real_screw.gameObject);
@@ -127,6 +126,8 @@ public class ScrewSceneController : MonoBehaviour
         manipulating = false;
 
         screwSizeText = screwSizeWindow.GetComponentInChildren<TextMesh>(true);
+
+        boneMix = GameObject.Find("BoneMix");
     }
 
     private void SetTexts(TextMeshPro[] texts, String text)
@@ -355,6 +356,8 @@ public class ScrewSceneController : MonoBehaviour
             {
                 DeactivateScrew(screw);
             }
+            boneMix.GetComponentInChildren<BoundsControl>(true).enabled = true;
+            boneMix.GetComponentInChildren<BoxCollider>(true).enabled = true;
             SetTexts(texts, Constants.START_MANIPULATING_SCREWS);
         }
         else
@@ -362,6 +365,8 @@ public class ScrewSceneController : MonoBehaviour
             screwButton.SetActive(true);
             FindNextIndex();
             ActivateScrew(screws[screwIndex]);
+            boneMix.GetComponentInChildren<BoundsControl>(true).enabled = false;
+            boneMix.GetComponentInChildren<BoxCollider>(true).enabled = false;
             SetTexts(texts, Constants.STOP_MANIPULATING_SCREWS);
         }
     }
@@ -378,6 +383,8 @@ public class ScrewSceneController : MonoBehaviour
             boxCollider.enabled = false;
             boundsControl.enabled = false;
             objectManipulator.enabled = false;
+            boneMix.GetComponentInChildren<BoundsControl>(true).enabled = true;
+            boneMix.GetComponentInChildren<BoxCollider>(true).enabled = true;
             SetTexts(texts, Constants.ALLOW_MANIPULATION);
         }
         else
@@ -385,6 +392,8 @@ public class ScrewSceneController : MonoBehaviour
             boxCollider.enabled = true;
             boundsControl.enabled = true;
             objectManipulator.enabled = true;
+            boneMix.GetComponentInChildren<BoundsControl>(true).enabled = false;
+            boneMix.GetComponentInChildren<BoxCollider>(true).enabled = false;
             SetTexts(texts, Constants.DISALLOW_MANIPULATION);
         }
     }
