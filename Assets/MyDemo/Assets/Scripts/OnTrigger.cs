@@ -51,12 +51,6 @@ public class OnTrigger : MonoBehaviour
         {
             Debug.Log(gameObject.name + " was triggered by " + other.gameObject.name);
 
-            // change default color to pink when screw is selected         
-            if (selectedFlag)
-            {
-                default_color = selectedScrewMaterial.color;
-            }
-
             //change color to red when colliding
             rend.material.SetColor("_Color", Color.red);
 
@@ -79,7 +73,11 @@ public class OnTrigger : MonoBehaviour
         {
             return; 
         }
-       
+        // ignore collisions with any children attached to the screw -- works only on the non-selected screws
+        if (gameObject.transform.IsChildOf(other.gameObject.transform)) 
+        {
+            return;
+        }     
         else
         {
             rend.material.SetColor("_Color", Color.red);
@@ -90,7 +88,12 @@ public class OnTrigger : MonoBehaviour
     public void OnTriggerExit(Collider other)
     {
         //Debug.Log("No longer in contact with " + other.gameObject.name);
-        
+            
+            // change default color to pink when screw is selected OnTriggerExit
+            if (selectedFlag) 
+            {
+                default_color = selectedScrewMaterial.color;
+            }
             rend.material.SetColor("_Color", default_color);
         
         
