@@ -128,6 +128,7 @@ public class ScrewSceneController : MonoBehaviour
         screwSizeText = screwSizeWindow.GetComponentInChildren<TextMesh>(true);
 
         boneMix = GameObject.Find("BoneMix");
+        boneMix.AddComponent<ignoreBoxCollider>();
     }
 
     private void SetTexts(TextMeshPro[] texts, String text)

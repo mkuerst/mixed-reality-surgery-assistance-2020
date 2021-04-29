@@ -5,6 +5,7 @@ using UnityEngine;
 public class OnTrigger : MonoBehaviour
 {
     private Color default_color;
+    private Color other_default_color;
     private Renderer rend;
     GameObject bone;
     GameObject bonemix;
@@ -20,7 +21,6 @@ public class OnTrigger : MonoBehaviour
         bonemix = GameObject.Find("BoneMix");
         screwChild= GameObject.Find("screwChild");
         rend = gameObject.GetComponent<Renderer>();
-        default_color = rend.material.GetColor("_Color");
         
     }
 
@@ -42,17 +42,18 @@ public class OnTrigger : MonoBehaviour
         {
             return;
         }
-        //ignore collisions with screwChild
-        if (other.gameObject.transform == screwChild.transform) 
-        {
-            return;
-        }
         else
         {
             Debug.Log(gameObject.name + " was triggered by " + other.gameObject.name);
-
-            //change color to red when colliding
-            rend.material.SetColor("_Color", Color.red);
+            //note the colors before colliding
+            if (gameObject.GetComponent<Renderer>() != null)
+            {
+                default_color = gameObject.GetComponent<Renderer>().material.color;
+            }
+            if (other.gameObject.GetComponent<Renderer>() != null)
+            {
+                other_default_color = other.gameObject.GetComponent<Renderer>().material.color;
+            }
 
         }
     }
@@ -89,16 +90,20 @@ public class OnTrigger : MonoBehaviour
     {
         //Debug.Log("No longer in contact with " + other.gameObject.name);
             
-            // change default color to pink when screw is selected OnTriggerExit
-            if (selectedFlag) 
-            {
-                default_color = selectedScrewMaterial.color;
-            }
-            rend.material.SetColor("_Color", default_color);
-        
-        
-        
+        // change default color to pink when screw is selected OnTriggerExit
+        if (selectedFlag) 
+        {
+            default_color = selectedScrewMaterial.color;
+        }
+        rend.material.SetColor("_Color", default_color);
+
+        //change the other collider color back 
+        if (other.gameObject.GetComponent<Renderer>() != null)
+        {
+            other.gameObject.GetComponent<Renderer>().material.color = other_default_color;
+        }
+
     }
 
-  
+
 }
