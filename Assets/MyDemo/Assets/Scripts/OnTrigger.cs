@@ -20,8 +20,7 @@ public class OnTrigger : MonoBehaviour
         bonemix = GameObject.Find("BoneMix");
         screwChild= GameObject.Find("screwChild");
         rend = gameObject.GetComponent<Renderer>();
-        default_color = gameObject.GetComponent<Renderer>().material.color;
-        
+        default_color = rend.material.color;
     }
 
 

@@ -17,13 +17,45 @@ public class followChild : MonoBehaviour
     {
         //create a child for the screw
         screwChild = new GameObject("screwChild");
-
         boundsControl = screwChild.AddComponent<BoundsControl>();
 
         screwChild.transform.SetParent(this.transform);
         follow = screwChild.transform;
-        //transform the child, align its center to the screw end point
-        follow.localPosition = new Vector3(0, 1, 0); //could be (0,-1, 0) as well
+
+        //transform the child, align its center to the screw end point closest to the lat/med plate
+        GameObject latPlate = GameObject.Find("Plate_Lat");
+        GameObject medPlate = GameObject.Find("Plate_Med");
+
+        //using of the fact that the lat plate is closer to the origin in z direction than the med plate
+        Vector3 ep1 = gameObject.transform.position + gameObject.transform.up*gameObject.transform.localScale.y/2;
+        Vector3 ep2 = gameObject.transform.position - gameObject.transform.up*gameObject.transform.localScale.y/2;
+        if(gameObject.tag == "Lat")
+        {
+            double d1 = (ep1.z - latPlate.transform.position.z);
+            double d2 = (ep2.z - latPlate.transform.position.z);
+            if (d1 < d2)
+            {
+                follow.localPosition = new Vector3(0, 1, 0);
+            }
+            else
+            {
+               follow.localPosition = new Vector3(0, -1, 0); 
+            }
+        }
+        else
+        {
+            double d1 = (ep1.z - medPlate.transform.position.z);
+            double d2 = (ep2.z - medPlate.transform.position.z);
+            if (d1 < d2)
+            {
+                follow.localPosition = new Vector3(0, -1, 0);
+            }
+            else
+            {
+               follow.localPosition = new Vector3(0, 1, 0); 
+            }
+        }
+        
         follow.localRotation = Quaternion.identity; // no relative rotation to the screw
         follow.localScale = new Vector3(1, 1, 1);
         //save the original tranform
