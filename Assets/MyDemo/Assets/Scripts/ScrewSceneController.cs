@@ -318,7 +318,6 @@ public class ScrewSceneController : MonoBehaviour
         screw.GetComponentInChildren<ScaleConstraint>(true).enabled = false;
         screw.GetComponentInChildren<PositionConstraint>(true).enabled = false; 
         screw.GetComponentInChildren<CapsuleCollider>(true).enabled = true;
-        //screw.GetComponentInChildren<MeshCollider>(true).enabled = true;
         screw.GetComponent<OnTrigger>().selectedFlag = false;
        
     }
@@ -327,8 +326,7 @@ public class ScrewSceneController : MonoBehaviour
     {
         screw.GetComponentInChildren<BoundsControl>(true).enabled = true;
         screw.GetComponentInChildren<Collider>().enabled = false;
-        screw.GetComponentInChildren<CapsuleCollider>().enabled = true;
-        //screw.GetComponentInChildren<MeshCollider>().enabled = true; 
+        screw.GetComponentInChildren<CapsuleCollider>().enabled = true; 
         screw.GetComponentInChildren<Renderer>().material = selectedScrewMaterial;
         screw.GetComponent<OnTrigger>().selectedFlag = true;
         SetCurrObjectManipulator(screw, manipulating);
@@ -365,7 +363,7 @@ public class ScrewSceneController : MonoBehaviour
         {
             screwButton.SetActive(true);
             FindNextIndex();
-            ActivateScrew(screws[screwIndex]);
+            ActivateScrew(screws[screwIndex]);            
             boneMix.GetComponentInChildren<BoundsControl>(true).enabled = false;
             boneMix.GetComponentInChildren<BoxCollider>(true).enabled = false;
             SetTexts(texts, Constants.STOP_MANIPULATING_SCREWS);
@@ -639,12 +637,12 @@ public class ScrewSceneController : MonoBehaviour
         if(manipulating)
         {
             manipulating = false;
-            buttonConfig.SetQuadIconByName(Constants.ICON_HAND_GESTURE);
+            buttonConfig.SetQuadIconByName(Constants.ICON_HAND_GESTURE);            
         }
         else
         {
             manipulating = true;
-            buttonConfig.SetQuadIconByName(Constants.ICON_STOP_HAND_GESTURE);
+            buttonConfig.SetQuadIconByName(Constants.ICON_STOP_HAND_GESTURE);            
         }
 
         SetCurrObjectManipulator(screws[screwIndex], manipulating);
@@ -657,7 +655,8 @@ public class ScrewSceneController : MonoBehaviour
         screw.GetComponentInChildren<WholeScaleConstraint>(true).enabled = activate;
         screw.GetComponentInChildren<ScaleConstraint>(true).enabled = !activate;
         screw.GetComponentInChildren<PositionConstraint>(true).enabled = activate;
-        screw.GetComponentInChildren<BoxCollider>(true).enabled = activate;
+       /*screw.GetComponentInChildren<BoxCollider>(true).enabled = activate;*/ //Is this line needed? if yes we could make an if conition (only if activate..)
+        screw.gameObject.GetComponent<OnTrigger>().selectedFlag = !activate;
     }
 
     public void DeleteScrew()

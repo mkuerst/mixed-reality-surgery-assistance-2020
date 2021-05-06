@@ -42,7 +42,7 @@ public class OnTrigger : MonoBehaviour
             return;
         }
 
-        // Debug.Log(gameObject.name + " was triggered by " + other.gameObject.name);
+         //Debug.Log(gameObject.name + " was triggered by " + other.gameObject.name);
 
     }
 
