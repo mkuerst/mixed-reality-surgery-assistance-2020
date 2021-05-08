@@ -9,6 +9,7 @@ public class followChild : MonoBehaviour
     private Transform follow;
     private Vector3 originalLocalPosition;
     private Quaternion originalLocalRotation;
+    private Vector3 origianlGlobalPosition;
     public BoundsControl boundsControl;
     private bool selected;
 
@@ -66,6 +67,7 @@ public class followChild : MonoBehaviour
         //save the original tranform
         originalLocalPosition = follow.localPosition;
         originalLocalRotation = follow.localRotation;
+        origianlGlobalPosition = follow.position;
 
         //by deactivating and activating the screwChild the handles will be shown
         screwChild.SetActive(false);
@@ -110,34 +112,39 @@ public class followChild : MonoBehaviour
             //reset local position
             follow.localPosition = originalLocalPosition;
 
-            //rescale handles when parent screw has ben scaled
-        //needed?
-            boundsControl.RotationHandlesConfig.ShowHandleForX = false;
-            boundsControl.RotationHandlesConfig.ShowHandleForY = false;
-            boundsControl.RotationHandlesConfig.ShowHandleForZ = false;
-            boundsControl.RotationHandlesConfig.ShowHandleForX = true;
-            boundsControl.RotationHandlesConfig.ShowHandleForY = true;
-            boundsControl.RotationHandlesConfig.ShowHandleForZ = true;
+        //    //rescale handles when parent screw has ben scaled
+        ////needed?
+        //    boundsControl.RotationHandlesConfig.ShowHandleForX = false;
+        //    boundsControl.RotationHandlesConfig.ShowHandleForY = false;
+        //    boundsControl.RotationHandlesConfig.ShowHandleForZ = false;
+        //    boundsControl.RotationHandlesConfig.ShowHandleForX = true;
+        //    boundsControl.RotationHandlesConfig.ShowHandleForY = true;
+        //    boundsControl.RotationHandlesConfig.ShowHandleForZ = true;
         }
 
         
 
     }
-    public void ScaleStopped(GameObject screw)
+    //public void ScaleStopped(GameObject screw)
+    public void ScaleStopped()
     {
-        BoundsControl boundsControl_parent = screw.GetComponent<BoundsControl>();
-        BoundsControl boundsControl_child = screw.transform.GetChild(0).gameObject.GetComponent<BoundsControl>();
+        //BoundsControl boundsControl_parent = screw.GetComponent<BoundsControl>();
+        //BoundsControl boundsControl_child = screw.transform.GetChild(0).gameObject.GetComponent<BoundsControl>();
 
-        //rescale handles after scaling
-        boundsControl_parent.ScaleHandlesConfig.ShowScaleHandles = false;
-        boundsControl_child.RotationHandlesConfig.ShowHandleForX = false;
-        boundsControl_child.RotationHandlesConfig.ShowHandleForY = false;
-        boundsControl_child.RotationHandlesConfig.ShowHandleForZ = false;
+        ////rescale handles after scaling
+        //boundsControl_parent.ScaleHandlesConfig.ShowScaleHandles = false;
+        //boundsControl_child.RotationHandlesConfig.ShowHandleForX = false;
+        //boundsControl_child.RotationHandlesConfig.ShowHandleForY = false;
+        //boundsControl_child.RotationHandlesConfig.ShowHandleForZ = false;
 
-        boundsControl_parent.ScaleHandlesConfig.ShowScaleHandles = true;
-        boundsControl_child.RotationHandlesConfig.ShowHandleForX = true;
-        boundsControl_child.RotationHandlesConfig.ShowHandleForY = true;
-        boundsControl_child.RotationHandlesConfig.ShowHandleForZ = true;
+        //boundsControl_parent.ScaleHandlesConfig.ShowScaleHandles = true;
+        //boundsControl_child.RotationHandlesConfig.ShowHandleForX = true;
+        //boundsControl_child.RotationHandlesConfig.ShowHandleForY = true;
+        //boundsControl_child.RotationHandlesConfig.ShowHandleForZ = true;
+
+        screwChild.SetActive(false);
+        screwChild.SetActive(true);
+        follow.position = origianlGlobalPosition;
         Debug.Log(" scale stopped ");
     }
        
