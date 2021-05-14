@@ -9,7 +9,7 @@ public class followChild : MonoBehaviour
     private Transform follow;
     private Vector3 originalLocalPosition;
     private Quaternion originalLocalRotation;
-    private Vector3 origianlGlobalPosition;
+    private Vector3 originalGlobalPosition;
     private Vector3 originalScale;
     public BoundsControl boundsControl;
     private bool selected;
@@ -74,7 +74,7 @@ public class followChild : MonoBehaviour
         //save the original tranform
         originalLocalPosition = follow.localPosition;
         originalLocalRotation = follow.localRotation;
-        origianlGlobalPosition = follow.position;
+        originalGlobalPosition = follow.position;
 
        
 
@@ -107,6 +107,9 @@ public class followChild : MonoBehaviour
         else
         {
             screwChild.SetActive(true);
+            //anchor the screw child position
+            follow.position = originalGlobalPosition;
+
             transform.position = follow.position;
 
             //HAS TO BE IN THIS ORDER
@@ -137,7 +140,7 @@ public class followChild : MonoBehaviour
             follow.localRotation = originalLocalRotation;
 
             //reset local position
-            follow.localPosition = originalLocalPosition;
+            //follow.localPosition = originalLocalPosition;
 
         }
 
