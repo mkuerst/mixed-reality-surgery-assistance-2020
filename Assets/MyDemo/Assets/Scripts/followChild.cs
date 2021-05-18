@@ -15,13 +15,10 @@ public class followChild : MonoBehaviour
     private bool selected;
     private bool scaling;
     private BoundsControl boundsControl_parent;
-    private BoundsControl boundsControl_child;
 
 
     private void Start()
     {
-           
-
         //create a child for the screw
         screwChild = new GameObject("screwChild");
         boundsControl = screwChild.AddComponent<BoundsControl>();
@@ -35,7 +32,8 @@ public class followChild : MonoBehaviour
         GameObject latPlate = GameObject.Find("Plate_Lat");
         GameObject medPlate = GameObject.Find("Plate_Med");
 
-        //using of the fact that the lat plate is closer to the origin in z direction than the med plate
+        //set the child position of the screw to its corresponding plate
+        //using the fact that the lat plate is closer to the origin in z direction than the med plate
         Vector3 ep1 = gameObject.transform.position + gameObject.transform.up*gameObject.transform.localScale.y/2;
         Vector3 ep2 = gameObject.transform.position - gameObject.transform.up*gameObject.transform.localScale.y/2;
         if(gameObject.tag == "Lat")
@@ -65,18 +63,15 @@ public class followChild : MonoBehaviour
             else
             {
                follow.localPosition = new Vector3(0, 1, 0);
-               ;
             }
         }
         
         follow.localRotation = Quaternion.identity; // no relative rotation to the screw
         follow.localScale = new Vector3(1, 1, 1);
-        //save the original tranform
+        //save the original transform
         originalLocalPosition = follow.localPosition;
         originalLocalRotation = follow.localRotation;
         originalGlobalPosition = follow.position;
-
-       
 
         //by deactivating and activating the screwChild the handles will be shown
         screwChild.SetActive(false);
@@ -102,16 +97,20 @@ public class followChild : MonoBehaviour
         if (!selected)
         {
             screwChild.SetActive(false);
-            
         }
         else
         {
             screwChild.SetActive(true);
-            //anchor the screw child position
-            follow.position = originalGlobalPosition;
+            //anchor the screw child position if in scaling mode
+            if (scaling) 
+            {
+               follow.position = originalGlobalPosition;
+               screwChild.SetActive(false);
+            }
+            
 
             transform.position = follow.position;
-
+            
             //HAS TO BE IN THIS ORDER
             //sort of "reverses" the quaternion so that the local rotation is 0 if it is equal to the original local rotation
             follow.RotateAround(follow.position, follow.forward, -originalLocalRotation.eulerAngles.z);
@@ -126,21 +125,17 @@ public class followChild : MonoBehaviour
             transform.position += -transform.TransformVector(new Vector3(0, 1, 0)) * originalLocalPosition.y;
             transform.position += -transform.forward * originalLocalPosition.z;
 
-            //scale screw only from one side
-            /*if (scaling)
-            {
-                float factor = (originalScale.y - transform.localScale.y);
-                Debug.Log("factor" + factor);
-                transform.position = transform.position + new Vector3(factor, 0, 0) ;
-                originalScale = transform.localScale;
-            }*/
-
 
             //resets local rotation, undoing step 2
             follow.localRotation = originalLocalRotation;
 
-            //reset local position
-            //follow.localPosition = originalLocalPosition;
+            //reset local position to make sure screw doesn't slide away
+            //reset global position to enable translation of the screw when not scaling
+            if (!scaling) 
+            {
+               follow.localPosition = originalLocalPosition;
+               originalGlobalPosition = follow.position;
+            }
 
         }
 
@@ -152,14 +147,11 @@ public class followChild : MonoBehaviour
         scaling = false;
         screwChild.SetActive(false);
         screwChild.SetActive(true);
-        //follow.position = origianlGlobalPosition;
-              
-        Debug.Log(" scale stopped ");
+        //Debug.Log(" scale stopped ");
     }
       
     public void OnScaleStarted()
-    {
-        originalScale = transform.localScale;
+    {   
         scaling = true;
     }
 
