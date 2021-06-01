@@ -96,6 +96,8 @@ public class ScrewSceneController : MonoBehaviour
                 real_screw.gameObject.GetComponent<Rigidbody>().useGravity = false;
                 real_screw.gameObject.GetComponent<Rigidbody>().isKinematic = true;
                 real_screw.gameObject.AddComponent<followChild>();
+                //real_screw.gameObject.AddComponent<scalePivot>();
+
 
                 screws.Add(real_screw.gameObject);
                 originalScrewPositions.Add(real_screw.gameObject.name, real_screw.position);
@@ -608,6 +610,7 @@ public class ScrewSceneController : MonoBehaviour
         newScrew.gameObject.GetComponent<Rigidbody>().useGravity = false;
         newScrew.gameObject.GetComponent<Rigidbody>().isKinematic = true;
         newScrew.AddComponent<followChild>();
+        //newScrew.AddComponent<scalePivot>();
         DeactivateScrew(screws[screwIndex]);
         screwIndex = screws.Count - 1;
         ActivateScrew(screws[screwIndex]);

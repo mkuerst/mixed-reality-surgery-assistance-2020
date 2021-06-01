@@ -29,30 +29,17 @@ public class scalePivot : MonoBehaviour
         //create a parent for the screw
         pivot = new GameObject("Pivot");
         pivot.transform.SetParent(screwparent.transform);
-        pivot.transform.localPosition = originalPosition;
+        pivot.transform.localPosition = originalPosition - originalScale / 2; //needs to be adapted!!! now screws aren't in same position as they should
         pivot.transform.localRotation = originalRotation;
         pivot.transform.localScale = originalScale;
-        boundsControl = pivot.AddComponent<BoundsControl>();
-        pivot.gameObject.AddComponent<ScaleConstraint>();
+       
 
-        this.transform.localPosition = new Vector3(0, -1, 0);
-        this.transform.localRotation = new Quaternion(0, 0, 0, 0);
-        this.transform.localScale = new Vector3(1, 1, 1);
-        boundsControl_original = this.GetComponent<BoundsControl>();
-        Destroy(boundsControl_original);
-
-        this.transform.SetParent(pivot.transform, false);
-
-        //adjust handles size by de/reactivating pivot gameobject
-        pivot.SetActive(false);
-        pivot.SetActive(true);
 
 
         //transform the child, align its center to the screw end point closest to the lat/med plate
         GameObject latPlate = GameObject.Find("Plate_Lat");
         GameObject medPlate = GameObject.Find("Plate_Med");
-    }
-/*
+
         //set the child position of the screw to its corresponding plate
         //using the fact that the lat plate is closer to the origin in z direction than the med plate
         Vector3 ep1 = gameObject.transform.position + gameObject.transform.up * gameObject.transform.localScale.y / 2;
@@ -63,12 +50,12 @@ public class scalePivot : MonoBehaviour
             double d2 = (ep2.z - latPlate.transform.position.z);
             if (d1 < d2)
             {
-                follow.localPosition = new Vector3(0, 1, 0);
+                this.transform.localPosition = new Vector3(0, -1, 0);
 
             }
             else
             {
-                follow.localPosition = new Vector3(0, -1, 0);
+                this.transform.localPosition = new Vector3(0, 1, 0);
 
             }
         }
@@ -78,78 +65,57 @@ public class scalePivot : MonoBehaviour
             double d2 = (ep2.z - medPlate.transform.position.z);
             if (d1 < d2)
             {
-                follow.localPosition = new Vector3(0, -1, 0);
+                this.transform.localPosition = new Vector3(0, 1, 0);
 
             }
             else
             {
-                follow.localPosition = new Vector3(0, 1, 0);
+                this.transform.localPosition = new Vector3(0, -1, 0);
             }
         }
 
-        follow.localRotation = Quaternion.identity; // no relative rotation to the screw
-        follow.localScale = new Vector3(1, 1, 1);
-        //save the original transform
-        originalLocalPosition = follow.localPosition;
-        originalLocalRotation = follow.localRotation;
-        originalGlobalPosition = follow.position;
+        this.transform.localRotation = Quaternion.identity;
+        this.transform.localScale = new Vector3(1, 1, 1);
+        /*
+        //remove bounds control of screw
+        boundsControl_original = this.GetComponent<BoundsControl>();
+        Destroy(boundsControl_original);*/
 
-        //by deactivating and activating the screwChild the handles will be shown
-        screwChild.SetActive(false);
+        //set pivot as parent
+        this.transform.SetParent(pivot.transform, false); //maybe set to true
 
-        //hide scale handles of child
-        boundsControl.ScaleHandlesConfig.ShowScaleHandles = false;
-        boundsControl.RotationHandlesConfig.ShowHandleForX = true;
-        //boundsControl.RotationHandlesConfig.ShowHandleForY = true;
-        boundsControl.RotationHandlesConfig.ShowHandleForZ = true;
-        screwChild.GetComponentInChildren<BoxCollider>().enabled = false;
+        //adjust handles size by de/reactivating pivot gameobject
+        pivot.SetActive(false);
+        pivot.SetActive(true);
 
-        //enable onScaleStopped function
-        boundsControl_parent.ScaleStopped.AddListener(OnScaleStopped);
-        boundsControl_parent.ScaleStarted.AddListener(OnScaleStarted);
-        scaling = false;
-
+        // such that box is ignored by collision detection?
+        pivot.gameObject.GetComponentInChildren<BoxCollider>().enabled = false;
     }
+
     private void Update()
     {
         selected = this.GetComponent<OnTrigger>().selectedFlag;
 
-        //only show handles etc when screw is selected
-        if (!selected)
+        if (selected)
         {
-            screwChild.SetActive(false);
-        }
-        else
-        {
-            screwChild.SetActive(true);
-            //anchor the screw child position if in scaling mode
-            if (scaling)
-            {
-                follow.position = originalGlobalPosition;
-                screwChild.SetActive(false);
-            }
+            //enable boundscontrol of pivot
+            boundsControl = pivot.AddComponent<BoundsControl>();
+            pivot.gameObject.AddComponent<ScaleConstraint>();
 
+            //remove bounds control of screw
+            boundsControl_original = this.GetComponent<BoundsControl>();
+            Destroy(boundsControl_original);
 
-            transform.position = follow.position;
-
+            pivot.SetActive(false);
+            pivot.SetActive(true);
 
         }
-
-
+        else 
+        {
+            this.gameObject.AddComponent<BoundsControl>();
+        }
+        
     }
-
-    public void OnScaleStopped()
-    {
-        scaling = false;
-        screwChild.SetActive(false);
-        screwChild.SetActive(true);
-        //Debug.Log(" scale stopped ");
-    }
-
-    public void OnScaleStarted()
-    {
-        scaling = true;
-    }
-*/
+ 
 
 }
