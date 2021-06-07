@@ -9,6 +9,8 @@ public class OnTrigger : MonoBehaviour
     GameObject bone;
     GameObject bonemix;
     GameObject screwChild;
+    GameObject pivot;
+    GameObject screwobj;
     public Material selectedScrewMaterial;
     public bool selectedFlag;
     int counter;
@@ -19,6 +21,8 @@ public class OnTrigger : MonoBehaviour
         bone = GameObject.Find("Bone");
         bonemix = GameObject.Find("BoneMix");
         screwChild= GameObject.Find("screwChild");
+        pivot= this.transform.parent.gameObject; //new
+        
         rend = gameObject.GetComponent<Renderer>();
         default_color = rend.material.color;
     }
@@ -37,12 +41,12 @@ public class OnTrigger : MonoBehaviour
             return;
         }
         //ignore collisions with bone
-        if (other.gameObject.transform.parent.transform.IsChildOf(bone.transform) || other.gameObject.transform == bonemix.transform) //if (other.gameObject.transform.parent.parent.name == "Bone")
+        if (other.gameObject.transform.parent.transform.IsChildOf(bone.transform) || other.gameObject.transform == bonemix.transform|| other.gameObject.transform==pivot.transform)
         {
             return;
         }
 
-         //Debug.Log(gameObject.name + " was triggered by " + other.gameObject.name);
+         Debug.Log(gameObject.name + " was triggered by " + other.gameObject.name);
 
     }
 
@@ -58,7 +62,7 @@ public class OnTrigger : MonoBehaviour
             return;
         }
         //ignore collisions with bone
-        if (other.gameObject.transform.parent.transform.IsChildOf(bone.transform) || other.gameObject.transform == bonemix.transform) //if (other.gameObject.transform.parent.parent.name == "Bone")
+        if (other.gameObject.transform.parent.transform.IsChildOf(bone.transform) || other.gameObject.transform == bonemix.transform || other.gameObject.transform == pivot.transform) 
         {
             return; 
         }
