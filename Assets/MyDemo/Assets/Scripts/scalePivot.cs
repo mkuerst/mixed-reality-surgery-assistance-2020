@@ -17,6 +17,8 @@ public class scalePivot : MonoBehaviour
     private bool scaling;
     private BoundsControl boundsControl_original;
 
+    private Vector3 direction;
+
 
     private void Start()
     {
@@ -24,6 +26,7 @@ public class scalePivot : MonoBehaviour
         originalPosition = this.transform.localPosition;
         originalRotation = this.transform.localRotation;
         originalScale = this.transform.localScale;
+        Debug.Log("scale" + originalScale);
 
         screwparent = this.transform.parent.gameObject;
         //create a parent for the screw
@@ -32,14 +35,18 @@ public class scalePivot : MonoBehaviour
         pivot.transform.localPosition = originalPosition; //needs to be adapted!!! now screws aren't in same position as they should
         pivot.transform.localRotation = originalRotation;
         pivot.transform.localScale = originalScale;
-       // pivot.transform.Translate(Vector3.up * originalScale.y/2, Space.Self);
-       //pivot.gameObject.transform.position= pivot.gameObject.transform.position - pivot.gameObject.transform.right * pivot.gameObject.transform.localScale.y / 2;
+       
         pivot.gameObject.AddComponent<BoundsControl>();
         pivot.gameObject.GetComponent<BoundsControl>().enabled = false;
         pivot.gameObject.AddComponent<ScaleConstraint>();
 
-       
-
+        //TODO: Adjust position of pivot such that screw is in right logation and relative location of screw is (0,1,0) resp(0,-1,0) 
+        //get y direction of screw (which is not y in the pivot!) in world direction
+        direction = this.transform.TransformDirection(Vector3.up); //returns world space direction
+        pivot.transform.localPosition = pivot.transform.localPosition - pivot.transform.InverseTransformDirection(direction)* originalScale.y/2;//converts direction to local space 
+        //or something like this??
+        // pivot.transform.Translate(Vector3.up * originalScale.y/2, Space.Self);
+        //pivot.gameObject.transform.position= pivot.gameObject.transform.position - pivot.gameObject.transform.right * pivot.gameObject.transform.localScale.y / 2;
 
         //transform the child, align its center to the screw end point closest to the lat/med plate
         GameObject latPlate = GameObject.Find("Plate_Lat");
@@ -56,14 +63,14 @@ public class scalePivot : MonoBehaviour
             if (d1 < d2)
             {
                 this.transform.localPosition = new Vector3(0, -1, 0);
-                pivot.transform.localPosition -= new Vector3(originalScale.y, 0, 0);
+                
 
 
             }
             else
             {
                 this.transform.localPosition = new Vector3(0, 1, 0);
-                pivot.transform.localPosition += new Vector3(originalScale.y, 0, 0);
+               
 
 
             }
@@ -75,14 +82,12 @@ public class scalePivot : MonoBehaviour
             if (d1 < d2)
             {
                 this.transform.localPosition = new Vector3(0, 1, 0);
-                pivot.transform.localPosition += new Vector3(originalScale.y, 0, 0);
 
 
             }
             else
             {
                 this.transform.localPosition = new Vector3(0, -1, 0);
-                pivot.transform.localPosition -= new Vector3(originalScale.y, 0, 0);
 
             }
         }
