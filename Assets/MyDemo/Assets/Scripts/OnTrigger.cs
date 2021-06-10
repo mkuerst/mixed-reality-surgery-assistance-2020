@@ -41,7 +41,7 @@ public class OnTrigger : MonoBehaviour
             return;
         }
         //ignore collisions with bone
-        if (other.gameObject.transform.parent.transform.IsChildOf(bone.transform) || other.gameObject.transform == bonemix.transform|| other.gameObject.transform==pivot.transform)
+        if (other.gameObject.transform.parent.transform.IsChildOf(bone.transform) || other.gameObject.transform == bonemix.transform)
         {
             return;
         }
@@ -62,7 +62,7 @@ public class OnTrigger : MonoBehaviour
             return;
         }
         //ignore collisions with bone
-        if (other.gameObject.transform.parent.transform.IsChildOf(bone.transform) || other.gameObject.transform == bonemix.transform || other.gameObject.transform == pivot.transform) 
+        if (other.gameObject.transform.parent.transform.IsChildOf(bone.transform) || other.gameObject.transform == bonemix.transform )
         {
             return; 
         }

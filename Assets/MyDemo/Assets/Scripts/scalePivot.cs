@@ -12,43 +12,40 @@ public class scalePivot : MonoBehaviour
     private Vector3 originalPosition;
     private Vector3 originalScale;
 
-    public BoundsControl pivotBoundsControl;
     private bool selected;
-    private bool scaling;
-    private BoundsControl boundsControl_original;
 
     private Vector3 direction;
 
 
     private void Start()
     {
-        //get original param of screw with resp to parent
-        originalPosition = this.transform.localPosition;
-        originalRotation = this.transform.localRotation;
-        originalScale = this.transform.localScale;
-        Debug.Log("scale" + originalScale);
+        //returns world space direction that points along the direction of the screw orientation
+        direction = this.transform.TransformDirection(Vector3.up); 
 
-        screwparent = this.transform.parent.gameObject;
-        //create a parent for the screw
+        // get parameters of screw with resp to World Space
+        originalPosition = this.transform.position; 
+        originalRotation = this.transform.rotation;
+        originalScale = this.transform.lossyScale;
+        float screwlength = Mathf.Max(originalScale.x, originalScale.y, originalScale.z);
+
+        screwparent = this.transform.parent.gameObject; //current parent of the screw
+        
+        //create a new parent for the screw
         pivot = new GameObject("Pivot");
-        pivot.transform.SetParent(screwparent.transform);
-        pivot.transform.localPosition = originalPosition; //needs to be adapted!!! now screws aren't in same position as they should
-        pivot.transform.localRotation = originalRotation;
+        
+        pivot.transform.position = originalPosition; // will be adapdet for every screw
+        pivot.transform.rotation = originalRotation;
         pivot.transform.localScale = originalScale;
-       
-        pivot.gameObject.AddComponent<BoundsControl>();
+        pivot.transform.SetParent(screwparent.transform, true);
+
+        // add bounds control to pivot 
+        pivot.gameObject.AddComponent<BoundsControl>(); 
         pivot.gameObject.GetComponent<BoundsControl>().enabled = false;
-        pivot.gameObject.AddComponent<ScaleConstraint>();
+       // pivot.gameObject.AddComponent<ScaleConstraint>();
+        pivot.gameObject.AddComponent<ScrewScaleConstraint>();
 
-        //TODO: Adjust position of pivot such that screw is in right logation and relative location of screw is (0,1,0) resp(0,-1,0) 
-        //get y direction of screw (which is not y in the pivot!) in world direction
-        direction = this.transform.TransformDirection(Vector3.up); //returns world space direction
-        pivot.transform.localPosition = pivot.transform.localPosition - pivot.transform.InverseTransformDirection(direction)* originalScale.y/2;//converts direction to local space 
-        //or something like this??
-        // pivot.transform.Translate(Vector3.up * originalScale.y/2, Space.Self);
-        //pivot.gameObject.transform.position= pivot.gameObject.transform.position - pivot.gameObject.transform.right * pivot.gameObject.transform.localScale.y / 2;
 
-        //transform the child, align its center to the screw end point closest to the lat/med plate
+        //transform the screw, align its end point closest to the lat/med plate to the center of the pivot objec
         GameObject latPlate = GameObject.Find("Plate_Lat");
         GameObject medPlate = GameObject.Find("Plate_Med");
 
@@ -62,15 +59,17 @@ public class scalePivot : MonoBehaviour
             double d2 = (ep2.z - latPlate.transform.position.z);
             if (d1 < d2)
             {
-                this.transform.localPosition = new Vector3(0, -1, 0);
-                
+               this.transform.localPosition = new Vector3(0, -1, 0);
+                pivot.transform.position = pivot.transform.position + direction * screwlength; // adjust position of pivot such that center of pivot lies at one end of the screw
+
 
 
             }
             else
             {
                 this.transform.localPosition = new Vector3(0, 1, 0);
-               
+                pivot.transform.position = pivot.transform.position - direction * screwlength; // adjust position of pivot such that center of pivot lies at one end of the scre
+
 
 
             }
@@ -82,12 +81,14 @@ public class scalePivot : MonoBehaviour
             if (d1 < d2)
             {
                 this.transform.localPosition = new Vector3(0, 1, 0);
+                pivot.transform.position = pivot.transform.position - direction * screwlength; // adjust position of pivot such that center of pivot lies at one end of the scre
 
 
             }
             else
             {
                 this.transform.localPosition = new Vector3(0, -1, 0);
+                pivot.transform.position = pivot.transform.position + direction * screwlength; // adjust position of pivot such that center of pivot lies at one end of the scre
 
             }
         }
@@ -95,16 +96,16 @@ public class scalePivot : MonoBehaviour
         this.transform.localRotation = Quaternion.identity;
         this.transform.localScale = new Vector3(1, 1, 1);
 
-
+ 
         //set pivot as parent
-        this.transform.SetParent(pivot.transform, false); //maybe set to true
+        this.transform.SetParent(pivot.transform, false); 
 
         //adjust handles size by de/reactivating pivot gameobject
         pivot.SetActive(false);
         pivot.SetActive(true);
 
         // such that box is ignored by collision detection?
-        //pivot.gameObject.GetComponentInChildren<BoxCollider>().enabled = false;
+        pivot.gameObject.GetComponentInChildren<BoxCollider>().enabled = false;
     }
 
     private void Update()
@@ -113,7 +114,7 @@ public class scalePivot : MonoBehaviour
 
         if (selected)
         {
-            if(pivot.gameObject.GetComponent<BoundsControl>().isActiveAndEnabled == true) // boundscontrol of pivot already enabled
+            if(pivot.gameObject.GetComponent<BoundsControl>().isActiveAndEnabled == true) // boundscontrol of pivot is already enabled
             { 
             }
             else
@@ -122,9 +123,6 @@ public class scalePivot : MonoBehaviour
                 pivot.gameObject.GetComponent<BoundsControl>().enabled = true;
                 //remove bounds control of screw
                 this.gameObject.GetComponent<BoundsControl>().enabled = false;
-
-                // such that box is ignored by collision detection?
-                //pivot.gameObject.GetComponentInChildren<BoxCollider>().enabled = false;
 
                 //rescale handles
                 pivot.SetActive(false);
@@ -137,13 +135,13 @@ public class scalePivot : MonoBehaviour
         }
         else 
         {
-            if (pivot.gameObject.GetComponent<BoundsControl>().isActiveAndEnabled == true) // boundscontrol of pivot still enabled
+            if (pivot.gameObject.GetComponent<BoundsControl>().isActiveAndEnabled == true) // boundscontrol of pivot is still enabled
             {
                 // remove boundscontrol  of pivot
                 pivot.gameObject.GetComponent<BoundsControl>().enabled = false;
 
                 // enable Bounds Control of screw again
-                this.gameObject.GetComponent<BoundsControl>().enabled = true;
+                //this.gameObject.GetComponent<BoundsControl>().enabled = true;
             }
             
         }
