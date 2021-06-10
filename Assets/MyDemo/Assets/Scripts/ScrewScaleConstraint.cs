@@ -12,7 +12,7 @@ public class ScrewScaleConstraint : TransformConstraint
     public override void ApplyConstraint(ref MixedRealityTransform transform)
     {
         Vector3 scale = transform.Scale;
-       // Vector3 pos= transform.Position;
+       // Vector3 pos= transform.Position; // add something like this to keep position of the screw during scaling?? doesnt work yet
 
         scale.x = worldPoseOnManipulationStart.Scale.x;
         scale.z = worldPoseOnManipulationStart.Scale.z;
