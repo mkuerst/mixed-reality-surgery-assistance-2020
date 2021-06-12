@@ -11,6 +11,7 @@ public class scalePivot : MonoBehaviour
     private Quaternion originalRotation;
     private Vector3 originalPosition;
     private Vector3 originalScale;
+    private Vector3 position_pivot;
 
     private bool selected;
 
@@ -43,6 +44,7 @@ public class scalePivot : MonoBehaviour
         pivot.gameObject.GetComponent<BoundsControl>().enabled = false;
        // pivot.gameObject.AddComponent<ScaleConstraint>();
         pivot.gameObject.AddComponent<ScrewScaleConstraint>();
+       
 
 
         //transform the screw, align its end point closest to the lat/med plate to the center of the pivot objec
@@ -93,6 +95,7 @@ public class scalePivot : MonoBehaviour
             }
         }
 
+        position_pivot = pivot.transform.position;
         this.transform.localRotation = Quaternion.identity;
         this.transform.localScale = new Vector3(1, 1, 1);
 
@@ -115,7 +118,8 @@ public class scalePivot : MonoBehaviour
         if (selected)
         {
             if(pivot.gameObject.GetComponent<BoundsControl>().isActiveAndEnabled == true) // boundscontrol of pivot is already enabled
-            { 
+            {
+                pivot.transform.position = position_pivot;//adjust the position of the pivot once the scaling handles are released as the scale constraint changes the position of the screw
             }
             else
             {
@@ -124,6 +128,7 @@ public class scalePivot : MonoBehaviour
                 //remove bounds control of screw
                 this.gameObject.GetComponent<BoundsControl>().enabled = false;
 
+                
                 //rescale handles
                 pivot.SetActive(false);
                 pivot.SetActive(true);
