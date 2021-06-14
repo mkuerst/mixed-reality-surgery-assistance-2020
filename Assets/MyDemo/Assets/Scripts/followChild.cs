@@ -83,7 +83,7 @@ public class followChild : MonoBehaviour
         boundsControl.RotationHandlesConfig.ShowHandleForZ = true;
         screwChild.GetComponentInChildren<BoxCollider>().enabled = false;
 
-        //enable onScaleStopped function
+        //enable event listeners 
         boundsControl_parent.ScaleStopped.AddListener(OnScaleStopped);
         boundsControl_parent.ScaleStarted.AddListener(OnScaleStarted);
         scaling = false;
@@ -93,7 +93,7 @@ public class followChild : MonoBehaviour
     {
         selected=this.GetComponent<OnTrigger>().selectedFlag;
 
-        //only show handles etc when screw is selected
+        //only show handles when screw is selected
         if (!selected)
         {
             screwChild.SetActive(false);
@@ -147,7 +147,6 @@ public class followChild : MonoBehaviour
         scaling = false;
         screwChild.SetActive(false);
         screwChild.SetActive(true);
-        //Debug.Log(" scale stopped ");
     }
       
     public void OnScaleStarted()
